@@ -48,13 +48,12 @@ func Parse(raw string) (string, smtp.Auth, error) {
 		default:
 			return "", nil, fmt.Errorf("unsupported auth method: %s", strings.ToUpper(su[1]))
 		}
-	} else {
-		if u.User == nil {
-			return host, auth, nil
-		}
+	} else if u.User != nil{
 		// PLAIN
 		pass, _ := u.User.Password()
 		auth = smtp.PlainAuth("", u.User.Username(), pass, hostname)
+	} else {
+		return host, auth, nil
 	}
 	return host, auth, nil
 }
