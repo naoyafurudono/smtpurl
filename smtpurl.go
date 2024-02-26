@@ -34,6 +34,9 @@ func Parse(raw string) (string, smtp.Auth, error) {
 		return "", nil, fmt.Errorf("invalid url: %s", raw)
 	}
 	host := fmt.Sprintf("%s:%s", hostname, port)
+	if u.User == nil {
+		return host, nil, nil
+	}
 	var auth smtp.Auth
 	if strings.Contains(strings.ToUpper(u.User.Username()), authToken) {
 		// ref: https://datatracker.ietf.org/doc/html/draft-earhart-url-smtp-00
